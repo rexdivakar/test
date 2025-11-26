@@ -20,19 +20,19 @@ jobs:
       - name: Connect to Tailscale
         uses: tailscale/github-action@v4
         with:
-          # Use an *ephemeral* auth key scoped for CI in your tailnet
-          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
-          # Optional: tag this node in Tailscale so you can see it in the admin UI
-          tags: ci
+          # OAuth client from https://tailscale.com/s/oauth-clients
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          # Optional but recommended: tag this CI node
+          tags: tag:ci
 
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v6
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          # Point this at your SonarQube inside the tailnet
-          # e.g. MagicDNS name or Tailscale IP + port
+          # Your SonarQube URL inside the tailnet
           SONAR_HOST_URL: https://sonar.laperm-dragon.ts.net
-          # or, for example:
+          # or e.g.
           # SONAR_HOST_URL: http://100.83.164.74:9000
 
       # If you wish to fail your job when the Quality Gate is red, uncomment:
